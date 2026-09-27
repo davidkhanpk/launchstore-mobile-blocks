@@ -12,13 +12,19 @@ export const DEFAULT_SCREENS: Record<string, ScreenDoc> = {
     templateType: "MOBILE_HOME",
     version: 1,
     blocks: [
-      { type: "Hero", props: {} },
+      { type: "BannerCarousel", props: {} },
+      { type: "CategoriesGrid", props: {} },
       { type: "ProductRail", props: { title: "Featured" } },
+      { type: "PromoBannerGrid", props: {} },
+      { type: "TrustBadges", props: {} },
     ],
   },
   product: {
     templateType: "MOBILE_PRODUCT",
     version: 1,
+    // AddToCart lives in the sticky footer (BlockScreen stickyCta), not in
+    // the scroll — the native PDP pattern (doc 10 §2.2). Related rail
+    // returns when the data layer serves real related products.
     blocks: [
       { type: "ProductGallery", props: { variant: "pager" } },
       { type: "ProductTitle", props: {} },
@@ -26,8 +32,49 @@ export const DEFAULT_SCREENS: Record<string, ScreenDoc> = {
       { type: "ProductVariantSelector", props: { style: "chips" } },
       { type: "StockIndicator", props: {} },
       { type: "QuantitySelector", props: {} },
-      { type: "AddToCart", props: { fullWidth: true } },
-      { type: "ProductRail", props: { title: "You may also like" } },
+      { type: "ProductDescription", props: {} },
+      { type: "ProductAccordion", props: {} },
+    ],
+  },
+  cart: {
+    templateType: 'MOBILE_CART_PAGE',
+    version: 1,
+    blocks: [
+      { type: 'CartItems', props: {} },
+      { type: 'DiscountEntry', props: {} },
+      { type: 'CartSummary', props: {} },
+      { type: 'AddToCart', props: { label: 'Checkout', fullWidth: true } },
+    ],
+  },
+  checkout: {
+    templateType: 'MOBILE_CHECKOUT_PAGE',
+    version: 1,
+    blocks: [
+      { type: 'AddToCart', props: { label: 'Place order', fullWidth: true } },
+    ],
+  },
+  content: {
+    templateType: 'MOBILE_CONTENT',
+    version: 1,
+    blocks: [
+      { type: 'Heading', props: { text: 'Page title', level: 'lg' } },
+      { type: 'TextBlock', props: { text: 'Content goes here.' } },
+    ],
+  },
+  account: {
+    templateType: 'MOBILE_ACCOUNT_PAGE',
+    version: 1,
+    blocks: [
+      { type: 'Avatar', props: { name: 'Your Account' } },
+      { type: 'Heading', props: { text: 'Orders', level: 'md' } },
+    ],
+  },
+  orderConfirmation: {
+    templateType: 'MOBILE_ORDER_CONFIRMATION_PAGE',
+    version: 1,
+    blocks: [
+      { type: 'Heading', props: { text: 'Order confirmed 🎉', level: 'lg' } },
+      { type: 'ProductRail', props: { title: 'You may also like' } },
     ],
   },
   listing: {

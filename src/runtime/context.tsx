@@ -25,6 +25,7 @@ export interface ProductLike {
   thumbnail?: string | null;
   images?: Array<{ url: string; alt?: string }> | null;
   variants?: VariantLike[] | null;
+  metadata?: Record<string, string> | null;
   calculated_price?: { calculated_amount: number | null; currency_code: string } | null;
 }
 
@@ -64,6 +65,9 @@ export function useScreenData<T = unknown>(key: string): T | undefined {
 
 export interface CommerceActions {
   addToCart(variantId: string, quantity: number): Promise<void>;
+  updateCartLine(lineId: string, quantity: number): Promise<void>;
+  removeCartLine(lineId: string): Promise<void>;
+  applyDiscount(code: string): Promise<void>;
   track(event: string, payload?: Record<string, unknown>): void;
   /** true when a real commerce runtime is present (app), false in canvas */
   readonly live: boolean;
@@ -73,6 +77,9 @@ const InertCommerce: CommerceActions = {
   async addToCart() {
     /* canvas: no orders from the editor */
   },
+  async updateCartLine() {},
+  async removeCartLine() {},
+  async applyDiscount() {},
   track() {
     /* canvas: no telemetry from the editor */
   },
@@ -128,6 +135,81 @@ export function useProductInteraction(): ProductInteraction {
       setQuantity: () => {},
     }
   );
+}
+
+export interface CartLineLike {
+  id: string;
+  title?: string | null;
+  variant_title?: string | null;
+  thumbnail?: string | null;
+  quantity: number;
+  unit_price?: number | null;
+  total?: number | null;
+}
+
+export interface CartLike {
+  id: string;
+  items?: CartLineLike[] | null;
+  item_count?: number;
+  subtotal?: number | null;
+  shipping_total?: number | null;
+  tax_total?: number | null;
+  discount_total?: number | null;
+  total?: number | null;
+  currency_code?: string | null;
+}
+
+export type SortOption = 'recommended' | 'newest' | 'price-asc' | 'price-desc';
+
+export interface ListingInteraction {
+  sort: SortOption;
+  setSort(s: SortOption): void;
+}
+
+const ListingInteractionContext = createContext<ListingInteraction | null>(null);
+
+export function ListingInteractionProvider({ children }: { children: ReactNode }) {
+  const [sort, setSort] = useState<SortOption>('recommended');
+  return (
+    <ListingInteractionContext.Provider value={{ sort, setSort }}>
+      {children}
+    </ListingInteractionContext.Provider>
+  );
+}
+
+export function useListingInteraction(): ListingInteraction {
+  const ctx = useContext(ListingInteractionContext);
+  return ctx ?? { sort: 'recommended', setSort: () => {} };
+}
+
+// ── Navigation channel (task 3.12) — app routes, canvas is inert ──────────
+
+export interface NavigationActions {
+  go(path: string): void;
+  readonly live: boolean;
+}
+
+const InertNavigation: NavigationActions = {
+  go() {
+    /* canvas: no navigation from the editor */
+  },
+  live: false,
+};
+
+const NavigationContext = createContext<NavigationActions>(InertNavigation);
+
+export function NavigationProviderOverride({
+  value,
+  children,
+}: {
+  value: NavigationActions;
+  children: ReactNode;
+}) {
+  return <NavigationContext.Provider value={value}>{children}</NavigationContext.Provider>;
+}
+
+export function useNavigation(): NavigationActions {
+  return useContext(NavigationContext);
 }
 
 /** Resolve the variant matching the current selection (example PDP semantics). */

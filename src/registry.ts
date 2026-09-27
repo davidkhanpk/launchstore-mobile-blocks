@@ -12,12 +12,28 @@ import type { BlockRegistry, MobileBlockCategory } from "./types";
  * the block catalog itself — categories and map travel in one package.
  */
 export const MOBILE_TEMPLATE_MAP: Record<string, MobileBlockCategory[]> = {
-  MOBILE_HOME: ["LAYOUT-M", "CONTENT", "HOMEPAGE"],
-  MOBILE_PRODUCT: ["LAYOUT-M", "CONTENT", "PRODUCT"],
-  MOBILE_LISTING: ["LAYOUT-M", "CONTENT", "LISTING"],
-  MOBILE_CART: ["LAYOUT-M", "CONTENT", "CART"],
-  MOBILE_CHECKOUT: ["LAYOUT-M", "CONTENT", "CHECKOUT"],
-  MOBILE_CONTENT: ["LAYOUT-M", "CONTENT"],
+  // One MOBILE_ counterpart per web page type — each scoped to its own
+  // component categories (doc 10 §1). Cart/checkout/account/legal start on
+  // shared categories until their dedicated blocks land (block set B / 6.2).
+  MOBILE_HOMEPAGE: ['HOMEPAGE', 'CONTENT'],
+  MOBILE_PRODUCT_PAGE: ['PRODUCT', 'CONTENT'],
+  MOBILE_COLLECTION_PAGE: ['LISTING', 'HOMEPAGE', 'CONTENT'],
+  MOBILE_STORE_PAGE: ['LISTING', 'HOMEPAGE', 'CONTENT'],
+  MOBILE_CATEGORY_PAGE: ['LISTING', 'HOMEPAGE', 'CONTENT'],
+  MOBILE_CART_PAGE: ['CART', 'HOMEPAGE', 'PRODUCT', 'CONTENT'],
+  MOBILE_CHECKOUT_PAGE: ['PRODUCT', 'CONTENT'],
+  MOBILE_ACCOUNT_PAGE: ['CONTENT'],
+  MOBILE_ORDER_CONFIRMATION_PAGE: ['HOMEPAGE', 'CONTENT'],
+  MOBILE_PRIVACY_POLICY_PAGE: ['CONTENT'],
+  MOBILE_TERMS_PAGE: ['CONTENT'],
+  MOBILE_CUSTOMER_SERVICE_PAGE: ['CONTENT'],
+  // legacy compressed set (old rows)
+  MOBILE_HOME: ['HOMEPAGE', 'CONTENT'],
+  MOBILE_PRODUCT: ['PRODUCT', 'CONTENT'],
+  MOBILE_LISTING: ['LISTING', 'HOMEPAGE', 'CONTENT'],
+  MOBILE_CART: ['CART', 'HOMEPAGE', 'PRODUCT', 'CONTENT'],
+  MOBILE_CHECKOUT: ['PRODUCT', 'CONTENT'],
+  MOBILE_CONTENT: ['CONTENT'],
 };
 
 export const FALLBACK_CATEGORIES: MobileBlockCategory[] = ["LAYOUT-M", "CONTENT"];
