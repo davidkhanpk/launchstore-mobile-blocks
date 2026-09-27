@@ -14,14 +14,16 @@
     "@shopify/restyle": "^2.4.0",
     "nativewind": "^4.2.0",
     "react": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "expo-image": "*"
   },
   "devDependencies": {
     "@shopify/restyle": "^2.4.5",
     "@types/react": "~19.2.3",
     "nativewind": "^4.2.7",
     "tailwindcss": "^3.4.19",
-    "typescript": "~5.9.2"
+    "typescript": "~5.9.2",
+    "expo-image": "~3.0.10"
   },
   "private": true
 }
