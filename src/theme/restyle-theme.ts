@@ -32,13 +32,28 @@ export interface Theme extends BaseTheme {
   };
 }
 
+/** Platform layout tokens ship as "12" or "12px" — parseFloat handles both. */
 const num = (v: string | undefined, fallback: number) => {
-  const n = Number(v);
+  const n = parseFloat(v ?? "");
   return Number.isFinite(n) ? n : fallback;
 };
 
+/** Component namespaces may be absent in legacy themes — derive safe defaults. */
+function buttonColors(t: ReturnType<typeof resolveThemeTokens>) {
+  const btn = t.colors.button ?? ({} as Record<string, never>);
+  return {
+    primaryBg: btn.primary?.background ?? t.colors.brand?.primary ?? "#111111",
+    primaryFg: btn.primary?.text ?? t.colors.text?.inverse ?? "#FFFFFF",
+    secondaryBg: btn.secondary?.background ?? t.colors.ui?.surface ?? "#F3F4F6",
+    secondaryFg: btn.secondary?.text ?? t.colors.text?.primary ?? "#111827",
+    dangerBg: btn.danger?.background ?? t.colors.status?.error ?? "#DC2626",
+    dangerFg: btn.danger?.text ?? t.colors.text?.inverse ?? "#FFFFFF",
+  };
+}
+
 export function buildRestyleTheme(raw: RawThemeTokens): Theme {
   const t = resolveThemeTokens(raw);
+  const btn = buttonColors(t);
   return {
     colors: {
       brandPrimary: t.colors.brand.primary,
@@ -51,12 +66,12 @@ export function buildRestyleTheme(raw: RawThemeTokens): Theme {
       uiBackground: t.colors.ui.background,
       uiSurface: t.colors.ui.surface,
       uiBorder: t.colors.ui.border,
-      buttonPrimaryBg: t.colors.button.primary.background,
-      buttonPrimaryFg: t.colors.button.primary.text,
-      buttonSecondaryBg: t.colors.button.secondary.background,
-      buttonSecondaryFg: t.colors.button.secondary.text,
-      buttonDangerBg: t.colors.button.danger.background,
-      buttonDangerFg: t.colors.button.danger.text,
+      buttonPrimaryBg: btn.primaryBg,
+      buttonPrimaryFg: btn.primaryFg,
+      buttonSecondaryBg: btn.secondaryBg,
+      buttonSecondaryFg: btn.secondaryFg,
+      buttonDangerBg: btn.dangerBg,
+      buttonDangerFg: btn.dangerFg,
     },
     borderRadii: {
       sm: num(t.layout.borderRadius.sm, 6),
