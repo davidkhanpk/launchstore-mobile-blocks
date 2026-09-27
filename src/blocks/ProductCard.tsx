@@ -28,7 +28,7 @@ export function ProductCardBlock({ product, showAddButton = true, onPress }: Pro
 
   return (
     <Pressable
-      accessibilityRole="button"
+      accessible
       accessibilityLabel={product.title}
       onPress={() => onPress?.(product)}
       className="w-44 overflow-hidden rounded-ls-md bg-ls-ui-surface"
@@ -53,7 +53,10 @@ export function ProductCardBlock({ product, showAddButton = true, onPress }: Pro
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={`Add ${product.title} to cart`}
-              onPress={() => void commerce.addToCart(variant.id, 1)}
+              onPress={(e) => {
+                e.stopPropagation?.();
+                void commerce.addToCart(variant.id, 1);
+              }}
               className="rounded-ls-md bg-ls-btn-primary-bg px-3 py-1.5"
             >
               <Text className="text-xs font-semibold text-ls-btn-primary-fg">Add</Text>
