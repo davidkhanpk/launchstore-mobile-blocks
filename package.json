@@ -1,6 +1,6 @@
 {
   "name": "@launchstore/mobile-blocks",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "LaunchStore's mobile commerce block catalog — React Native blocks rendered natively in the app and via react-native-web in the Puck editor canvas (docs/store-apps doc 4).",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
