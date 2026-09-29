@@ -81,20 +81,11 @@ if "%SHOULD_PUSH%"=="1" (
 :: ---- Step 6: native-dep diff check ----------------------------------
 :: New runtime deps vs the previous tag can mean native modules = binary
 :: release, not just OTA. Pure styling/JS changes ship via eas update.
+:: Uses scripts/dep-diff.js — inline node -e in CMD mangles nested quotes.
 echo [6/7] dependency diff vs previous tag ...
 for /f "tokens=*" %%p in ('git describe --abbrev^=0 v%NEW_VERSION%^~1 2^>nul') do set "PREV_TAG=%%p"
 if defined PREV_TAG (
-    for /f "tokens=*" %%d in ('node -e "const{execSync}=require('child_process');try{const a=JSON.parse(execSync('git show %PREV_TAG%:package.json'));const b=require('./package.json');const dep=a.dependencies||{};const now=b.dependencies||{};const added=Object.keys(now).filter(k=>!dep[k]);if(added.length){console.log('NEW-DEPS:'+added.join(','))}}catch(e){}"') do set "DEP_CHECK=%%d"
-    if defined DEP_CHECK (
-        echo.
-        echo   *** WARNING: %DEP_CHECK% ***
-        echo   New runtime dependencies since %PREV_TAG% — if any carry native
-        echo   modules this release needs EAS Build + store submission,
-        echo   NOT just eas update.
-        echo.
-    ) else (
-        echo        JS-only release — ships via eas update.
-    )
+    node scripts/dep-diff.js %PREV_TAG%
 ) else (
     echo        first tagged release.
 )
